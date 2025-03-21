@@ -1,0 +1,38 @@
+﻿namespace APBD3;
+
+public class LiquidContainer : Container, IHazardNotifier
+{
+    public LiquidContainer(double weigth, double height, double singleWeigth, double deep, string serialNumber, double maxWeigth) : base(weigth, height, singleWeigth, deep, serialNumber, maxWeigth)
+    {
+        
+    }
+    
+    public override void LoadContainer(double weigth)
+    {
+        base.LoadContainer(weigth);
+        bool dangerous = false;
+
+        if (dangerous)
+        {
+            if (weigth > MaxWeigth * 0.5)
+            {
+                Weigth = MaxWeigth*0.5;
+                Warn(SerialNumber);
+            }
+        }
+        else
+        {
+            if (weigth > MaxWeigth * 0.9)
+            {
+                Weigth = MaxWeigth*0.9;
+                
+            }
+        }
+        
+    }
+
+    public void Warn(string number)
+    {
+        Console.WriteLine($"Warning container : {number}");
+    }
+}
