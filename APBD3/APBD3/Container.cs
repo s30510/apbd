@@ -1,7 +1,9 @@
 ﻿namespace APBD3;
 
-public class Container
+abstract 
+    public class Container
 {
+ 
     public double Weight { get; set; }
     public double Height { get; set; }
     public double SingleWeight { get; set; }
@@ -12,17 +14,17 @@ public class Container
    
     
     
-    public Container(double weigth, double height, double singleWeigth, double deep, string serialNumber, double maxWeigth)
+    public Container( double height, double singleWeigth, double deep, double maxWeigth)
     {
-        Weight = weigth;
+    
         Height = height;
         SingleWeight = singleWeigth;
         Deep = deep;
-        SerialNumber = serialNumber;
         MaxWeight = maxWeigth;
-        LoadContainer(weigth);
+       
+        
     }
-  
+    
 
     public virtual void DropContianer()
     {
@@ -30,10 +32,9 @@ public class Container
         
     }
 
-    public virtual void LoadContainer(double weigth)
+    public virtual void LoadContainer(Cargo cargo)
     {
-        
-        Weight += weigth;
+        Weight += cargo.weight;
         if (Weight > MaxWeight)
         {
             throw new OverflowException("Weigth is greater than maximum weigth");

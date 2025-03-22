@@ -3,19 +3,26 @@
 public class GasContainer : Container, IHazardNotifier
 
 {
+    public static int GCounter; 
    private double Pressure;
-    public GasContainer(int weigth, int height, int singleWeigth, int deep, string serialNumber, int maxWeigth) : base(weigth, height, singleWeigth, deep, serialNumber, maxWeigth)
+    public GasContainer( int height, int singleWeigth, int deep, int maxWeigth) : base( height, singleWeigth, deep,  maxWeigth)
     {
+        GenerateSerialNumber();
     }
 
+    
+    public void GenerateSerialNumber()
+    {
+        SerialNumber = $"KON-G-{GCounter++}"; ;
+    }
     public override void DropContianer()
     {
        Weight *= 0.05;
     }
 
-    public override void LoadContainer(double weigth)
+    public override void LoadContainer(Cargo cargo)
     {
-        base.LoadContainer(weigth);
+        base.LoadContainer(cargo);
         bool dangerous = false;
 
         if (dangerous)

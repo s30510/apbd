@@ -9,8 +9,7 @@ public class ContainerShip(string name, double maxSpeed, int maxContainersCount,
     private int MaxContainersCount {get; set; } = maxContainersCount;
     private double MaxTotalWeight{get; set; } = maxTotalWeight;
    
-    
-
+  
     
     public void Load(Container container)
     {
