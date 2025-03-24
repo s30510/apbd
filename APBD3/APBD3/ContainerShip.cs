@@ -45,7 +45,6 @@ public class ContainerShip(string name, double maxSpeed, int maxContainersCount,
         {
             if (Containers[index].GetSerialNumber() == container2.GetSerialNumber())
             {
-             Console.WriteLine("Kontener istenieje");
              exist = true;
              tempIndex = index;
             }
