@@ -1,39 +1,50 @@
 ﻿namespace APBD3;
 
 public class GasContainer : Container, IHazardNotifier
-
 {
-    public static int GCounter; 
-   private double Pressure;
-    public GasContainer( int height, int singleWeigth, int deep, int maxWeigth) : base( height, singleWeigth, deep,  maxWeigth)
+    public static int GCounter;
+    public double Pressure;
+
+    public GasContainer(int height, int singleWeight, int deep, int maxWeight, double pressure) : base(height,
+        singleWeight, deep, maxWeight)
     {
+        Pressure = pressure;
         GenerateSerialNumber();
     }
 
-    
+
     public void GenerateSerialNumber()
     {
-        SerialNumber = $"KON-G-{GCounter++}"; ;
-    }
-    public override void DropContianer()
-    {
-       Weight *= 0.05;
+        SerialNumber = $"KON-G-{GCounter++}";
+        ;
     }
 
-    public override void LoadContainer(Cargo cargo)
+    public override void DropContainer()
     {
-        base.LoadContainer(cargo);
-        bool dangerous = false;
+        Cargo.Weight *= 0.05;
+    }
 
-        if (dangerous)
+    public override void LoadContainer(Cargo loadedCargo)
+    {
+        if (loadedCargo.CargoType == Cargo.Type.Gas)
         {
-           Warn(SerialNumber);
+            base.LoadContainer(loadedCargo);
+            bool dangerous = false;
+
+            if (dangerous)
+            {
+                NotifyHazard(GetSerialNumber(),"Dangerous operation detected");
+            }
         }
-       
+        else
+        {
+            Console.WriteLine("Invalid Cargo type");
+        }
     }
 
-    public void Warn(string number)
+
+    public void NotifyHazard(string containerNumber, string message)
     {
-        Console.WriteLine($"Warning container : {number}");
+        Console.WriteLine("{0}: {1}", containerNumber, message);
     }
 }

@@ -1,49 +1,66 @@
 ﻿namespace APBD3;
 
-abstract 
-    public class Container
+abstract
+    public class Container(double height, double singleWeight, double deep, double maxWeight)
 {
- 
-    public double Weight { get; set; }
-    public double Height { get; set; }
-    public double SingleWeight { get; set; }
-    public double Deep { get; set; }
-    public string SerialNumber { get; set; }
-    public double MaxWeight { get; set; }
+    protected double Height = height;
+    protected double SingleWeight = singleWeight;
+    protected double Deep = deep;
+    protected double MaxWeight = maxWeight;
+    protected Cargo Cargo = new Cargo("None", Cargo.Type.None, 0, false);
 
-   
-    
-    
-    public Container( double height, double singleWeigth, double deep, double maxWeigth)
-    {
-    
-        Height = height;
-        SingleWeight = singleWeigth;
-        Deep = deep;
-        MaxWeight = maxWeigth;
-       
-        
-    }
-    
+    protected string SerialNumber = "";
 
-    public virtual void DropContianer()
+    
+    public string GetSerialNumber()
     {
-        this.Weight = 0;
-        
+        return SerialNumber;
     }
 
-    public virtual void LoadContainer(Cargo cargo)
+
+    public double GetTotalWeight()
     {
-        Weight += cargo.weight;
-        if (Weight > MaxWeight)
+        return SingleWeight + Cargo.Weight;
+    }
+
+    public double GetCargoWeight()
+    {
+        return Cargo.Weight;
+    }
+
+    public void SetCargoWeight(double weight)
+    {
+        Cargo.Weight = weight;
+    }
+
+
+    public virtual void DropContainer()
+    {
+        SetCargoWeight(0);
+    }
+
+    public virtual void LoadContainer(Cargo loadedCargo)
+    {
+        if (GetCargoWeight() != 0)
         {
-            throw new OverflowException("Weigth is greater than maximum weigth");
+            Console.WriteLine("Container is already loaded");
+            return;
         }
+
+        SetCargoWeight(loadedCargo.Weight);
+
+        if (GetCargoWeight() >= MaxWeight)
+        {
+            SetCargoWeight(0);
+            throw new OverfillException("Weigth is greater than maximum weigth");
+        }
+
+        Cargo = loadedCargo;
     }
 
 
     public override string ToString()
     {
-        return SerialNumber;
+        return SerialNumber + "[" + Cargo.CargoName + "]";
     }
 }

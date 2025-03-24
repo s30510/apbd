@@ -1,26 +1,23 @@
 ﻿namespace APBD3;
 
-public class Cargo
+public class Cargo(
+    string cargoName,
+    Cargo.Type cargoType,
+    double weight,
+    bool dangerous,
+    double requiredTemperature = 0)
 {
     public enum Type
     {
-        LIQUID,GAS,FROZEN
+        Liquid,
+        Gas,
+        Frozen,
+        None
     }
-    
 
-    public string cargoName;
-    public Type _type;
-    public double weight;
-    public bool dangerous;
-    
-    
-
-
-    public Cargo(string cargoName, Type type,double weight, bool dangerous)
-    {
-        this.cargoName = cargoName;
-        this._type = type;
-        this.weight = weight;
-        this.dangerous = dangerous;
-    }
+    public string CargoName = cargoName;
+    public Type CargoType = cargoType;
+    public double Weight = weight;
+    public bool Dangerous = dangerous;
+    public double RequiredTemperature = requiredTemperature;
 }

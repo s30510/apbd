@@ -2,5 +2,5 @@
 
 public interface IHazardNotifier
 {
-    public void Warn(string number);
+    void NotifyHazard(string containerNumber, string message);
 }

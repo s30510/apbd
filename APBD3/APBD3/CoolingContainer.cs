@@ -1,10 +1,14 @@
 ﻿namespace APBD3;
 
-public class CoolingContainer : Container, IHazardNotifier
+public class CoolingContainer : Container
 {
     public static int CCounter;
-    public CoolingContainer( int height, int singleWeigth, int deep,  int maxWeigth) : base( height, singleWeigth, deep, maxWeigth)
+    public string ProductType ="";
+    public double Temperature;
+    
+    public CoolingContainer( int height, int singleWeight, int deep,  int maxWeight, double temperature) : base( height, singleWeight, deep, maxWeight)
     {
+        Temperature = temperature;
         GenerateSerialNumber();
     }
     
@@ -13,8 +17,23 @@ public class CoolingContainer : Container, IHazardNotifier
         SerialNumber = $"KON-C-{CCounter++}"; ;
     }
 
-    public void Warn(string number)
+    public override void LoadContainer(Cargo loadedCargo)
     {
-        throw new NotImplementedException();
+        if (loadedCargo.CargoType == Cargo.Type.Frozen)
+        {
+            if (Temperature < loadedCargo.RequiredTemperature)
+            {
+                Console.WriteLine("The temperature of the container cannot be lower than the temperature required");
+                return;
+            }
+            
+            base.LoadContainer(loadedCargo);
+            ProductType = loadedCargo.CargoName;
+        }
+        else
+        {
+            Console.WriteLine("Invalid cargo type");
+        }
+
     }
 }

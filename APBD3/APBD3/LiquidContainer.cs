@@ -2,7 +2,6 @@
 
 public class LiquidContainer : Container, IHazardNotifier
 {
-
     public static int LCounter; 
     public LiquidContainer( double height, double singleWeigth, double deep, double maxWeigth) : base( height, singleWeigth, deep, maxWeigth)
     {
@@ -13,35 +12,38 @@ public class LiquidContainer : Container, IHazardNotifier
     {
         SerialNumber = $"KON-L-{LCounter++}"; ;
     }
-    
-    public override void LoadContainer(Cargo cargo)
-    {
-        base.LoadContainer(cargo);
-        bool dangerous = false;
 
-        if (dangerous)
+    public override void LoadContainer(Cargo loadedCargo)
+    {
+        if (loadedCargo.CargoType == Cargo.Type.Liquid)
         {
-            if (cargo.weight > MaxWeight * 0.5)
+
+            base.LoadContainer(loadedCargo);
+            bool dangerous =loadedCargo.Dangerous;
+
+            if (dangerous)
             {
-                Weight = MaxWeight*0.5;
-                Warn(SerialNumber);
+                if (GetCargoWeight() > MaxWeight * 0.5)
+                {
+                    NotifyHazard(GetSerialNumber(),"Dangerous operation detected");
+                }
+            }
+            else
+            {
+                if (GetCargoWeight() > MaxWeight * 0.9)
+                {
+                    NotifyHazard(GetSerialNumber(),"Dangerous operation detected");
+                }
             }
         }
         else
         {
-            if (cargo.weight > MaxWeight * 0.9)
-            {
-                Weight = MaxWeight*0.9;
-                
-            }
+            Console.WriteLine("Invalid cargo type");
         }
-        
     }
-
-    public void Warn(string number)
+    
+    public void NotifyHazard(string containerNumber, string message)
     {
-        Console.WriteLine($"Warning container : {number}");
+        Console.WriteLine("{0}: {1}", containerNumber, message);
     }
-
-
 }
