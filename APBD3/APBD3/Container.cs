@@ -9,9 +9,19 @@ abstract
     protected double MaxWeight = maxWeight;
     protected Cargo Cargo = new Cargo("None", Cargo.Type.None, 0, false);
 
-    protected string SerialNumber = "";
+    public string SerialNumber
+    {
+         get
+        {
+            return SerialNumber; 
+        }
+        set
+        {
+         SerialNumber = value;   
+        }
+    }
 
-    
+
     public string GetSerialNumber()
     {
         return SerialNumber;
