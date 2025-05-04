@@ -21,7 +21,13 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult>GetTrips()
         {
             var trips = await _tripsService.GetTripsAsync();
+           
             return Ok(trips);
         }
+        
+        
     }
+    
+    
+    
 }
