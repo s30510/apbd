@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Elfie.Model;
 using WebApplication1.Services;
 
 namespace WebApplication1.Controllers
@@ -9,10 +7,9 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class TripsController : ControllerBase
     {
-        private readonly ITripsService _tripsService;
-
-
-        public TripsController(ITripsService tripsService)
+        private readonly IService _tripsService;
+        
+        public TripsController(IService tripsService)
         {
             _tripsService = tripsService;
         }
@@ -25,9 +22,6 @@ namespace WebApplication1.Controllers
             return Ok(trips);
         }
         
-        
     }
-    
-    
     
 }

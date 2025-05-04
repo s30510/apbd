@@ -9,44 +9,53 @@ namespace WebApplication1.Controllers
     public class ClientsController : ControllerBase
     {
 
-        private IClientTripsService _clientTripsService;
-        
-        private INewClientService _newClientService;
-        public ClientsController(IClientTripsService clientTripsService, INewClientService newClientService)
+        private IService _iService;
+        public ClientsController(IService iService)
         {
-            _clientTripsService = clientTripsService;
-            _newClientService = newClientService;
+            _iService = iService;
         }
 
         [HttpGet("{id}/trips")]
         public async Task<IActionResult> GetClientTrips(string id)
         {
-            var clientTrips = await _clientTripsService.GetClientTripsAsync(id);
-            if (clientTrips.IdClient == 0)
+            var clientTrips = await _iService.GetClientTripsAsync(id);
+            if (clientTrips.IdClient == 0 ) 
             {
                 return NotFound();
             }
-            
             return Ok(clientTrips);
         }
         
         [HttpPost]
-        public async Task<IActionResult> PostClients([FromBody]NewClientDTO newClient )
+        public async Task<IActionResult> PostClients(ClientDTO newClient )
         {
-            await _newClientService.PostNewClientAsync(newClient.FirstName, newClient.LastName, newClient.Email, newClient.Telephone,newClient.Pesel);
-            return Created();
+         var client =   await _iService.PostNewClientAsync(newClient.FirstName, newClient.LastName, newClient.Email, newClient.Telephone,newClient.Pesel);
+            return Ok(client);
         }
 
         [HttpPut("{id}/trips/{tripId}")]
-        public async Task<IActionResult> PutClientTrip(string clientId, string tripId)
+        public async Task<IActionResult> PutClientTrip(string id, string tripId)
         {
-            return Ok("PutClient");
+          
+            var status = await _iService.PutNewRegisteredClientTrip(id, tripId);
+            
+            if (status == 404)
+            {
+               return NotFound();
+            }
+            if (status == 409)
+            {
+                return BadRequest("no places available");
+            }
+            
+            return Ok();
         }
 
         [HttpDelete("{id}/trips/{tripId}")]
         public async Task<IActionResult> DeleteClientTrip(string clientId, string tripId)
         {
-            return Ok("DeleteClient");
+            await _iService.DeleteRegisteredClientTrip(clientId, tripId);
+            return Ok();
         }
         
     }

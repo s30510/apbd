@@ -1,4 +1,6 @@
-﻿namespace WebApplication1.Models.DTOs;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebApplication1.Models.DTOs;
 
 
 public class TripDTO
@@ -8,8 +10,10 @@ public class TripDTO
     public string Description { get; set; }
     public DateTime DateFrom { get; set; }
     public DateTime DateTo { get; set; } 
-    public int Maxpeople { get; set; }
+    public int MaxPeople { get; set; }
     public List<object> Countries { get; set; }
+    public int RegisteredAt { get; set; }
+    public int? PaymentDate { get; set; } 
 }
 
 public class ClientTripsDTO
@@ -20,15 +24,21 @@ public class ClientTripsDTO
    public List<TripDTO> Trips { get; set; }
 }
 
-public class NewClientDTO
+public class ClientDTO
 {
-    public int IdClient { get; set; }
+    [Required]
     public string FirstName { get; set; }
+    [Required]
     public string LastName { get; set; }
+    [Required]
     public string Email { get; set; }
+    [RegularExpression("\\+48\\d{9}")]
     public string Telephone { get; set; }
+    [RegularExpression("\\d{11}")]
     public string Pesel { get; set; }
 }
+
+
 
 
 
