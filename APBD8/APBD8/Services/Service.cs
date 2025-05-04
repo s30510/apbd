@@ -202,7 +202,7 @@ public class Service : IService
                     maxPeople = reader.GetInt32(0);
                     reader.Close();
                 }
-                
+
                 //pobieramy informacje o rzeczywistej liczbie osób zarejestrownych na wycieczke, żeby sprawdzić czy jest jeszcze miejsce dla nowo dodawanej osoby
                 await using (SqlCommand sqlCommand =
                              new SqlCommand(
@@ -253,13 +253,43 @@ public class Service : IService
 
     public async Task<int> DeleteRegisteredClientTrip(string clientId, string tripId)
     {
-        string txtComand = "DELETE FROM Client WHERE IdClient = @clientId";
+        
         await using (SqlConnection conn = new SqlConnection(_connectionString))
-        await using (SqlCommand cmd = new SqlCommand(txtComand, conn))
         {
-            cmd.Parameters.AddWithValue("@clientId", clientId);
             await conn.OpenAsync();
-            return await cmd.ExecuteNonQueryAsync();
+            SqlTransaction transaction = conn.BeginTransaction();
+
+            
+            //sprawdzamy czy rejestracja istnieje
+            await using (SqlCommand cmd = new SqlCommand(
+                             "SELECT * FROM Client\n INNER JOIN Client_Trip ON Client_Trip.IdClient=Client.IdClient\n INNER JOIN Trip ON Client_Trip.IdTrip = Trip.IdTrip\n WHERE Client_Trip.IdClient=@IdClient AND Client_Trip.IdTrip = @IdTrip",
+                             conn, transaction))
+            {
+                
+                cmd.Parameters.AddWithValue("@IdClient", clientId);
+                cmd.Parameters.AddWithValue("@IdTrip", tripId);
+
+                var reader = await cmd.ExecuteReaderAsync();
+
+                if (!await reader.ReadAsync())
+                {
+                    return 404;
+                }
+                reader.Close();
+            }
+       
+            //usuwamy rejestracje
+            await using (SqlCommand cmd = new SqlCommand("DELETE FROM Client_Trip WHERE IdClient = @IdClient AND IdTrip = @IdTrip", conn,
+                             transaction))
+            {
+                cmd.Parameters.AddWithValue("@IdClient", clientId);
+                cmd.Parameters.AddWithValue("@IdTrip", tripId);
+                
+                await cmd.ExecuteNonQueryAsync();
+                transaction.Commit();
+                return 200;
+            }
+            
         }
     }
 }

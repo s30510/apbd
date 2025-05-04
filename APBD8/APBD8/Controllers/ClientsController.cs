@@ -38,7 +38,7 @@ namespace WebApplication1.Controllers
         {
           
             var status = await _iService.PutNewRegisteredClientTrip(id, tripId);
-            
+                
             if (status == 404)
             {
                return NotFound();
@@ -52,9 +52,13 @@ namespace WebApplication1.Controllers
         }
 
         [HttpDelete("{id}/trips/{tripId}")]
-        public async Task<IActionResult> DeleteClientTrip(string clientId, string tripId)
+        public async Task<IActionResult> DeleteClientTrip(string id, string tripId)
         {
-            await _iService.DeleteRegisteredClientTrip(clientId, tripId);
+          var status=  await _iService.DeleteRegisteredClientTrip(id, tripId);
+          if (status == 404)
+          {
+              return NotFound();
+          }
             return Ok();
         }
         
